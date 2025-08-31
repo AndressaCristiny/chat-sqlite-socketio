@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat em Tempo Real</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  </head>
+  <body class="bg-light">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0">Chat em Tempo Real</h5>
+            </div>
+
+            <ul
+              id="chat-messages"
+              class="list-group list-group-flush"
+              style="height: 400px; overflow-y: auto"
+            ></ul>
+
+            <div class="card-body">
+              <div class="mb-2">
+                <input
+                  id="usuario"
+                  class="form-control"
+                  placeholder="Seu nome"
+                />
+              </div>
+              <div class="input-group">
+                <input
+                  id="msg"
+                  class="form-control"
+                  placeholder="Digite sua mensagem"
+                />
+                <button class="btn btn-primary" onclick="enviar()">
+                  Enviar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const socket = io();
+
+      function enviar() {
+        const usuario = document.getElementById("usuario").value || "Anônimo";
+        const msg = document.getElementById("msg").value;
+        if (msg.trim() === "") return;
+        socket.emit("mensagem", { usuario, mensagem: msg });
+        document.getElementById("msg").value = "";
+      }
+
+      // Detectar tecla Enter no input de mensagem
+      const inputMsg = document.getElementById("msg");
+      inputMsg.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault(); // previne o comportamento padrão de quebra de linha
+          enviar();
+        }
+      });
+
+      socket.on("historico", (mensagens) => {
+        mensagens.forEach((m) => adicionarMensagem(m.usuario, m.mensagem));
+        scrollChatToBottom();
+      });
+
+      socket.on("mensagem", (data) => {
+        adicionarMensagem(data.usuario, data.mensagem);
+        scrollChatToBottom();
+      });
+
+      function adicionarMensagem(usuario, msg) {
+        const li = document.createElement("li");
+        li.className = "list-group-item";
+        li.innerHTML = `<strong>${usuario}:</strong> ${msg}`;
+        document.getElementById("chat-messages").appendChild(li);
+      }
+
+      function scrollChatToBottom() {
+        const chat = document.getElementById("chat-messages");
+        chat.scrollTop = chat.scrollHeight;
+      }
+    </script>
+  </body>
+</html>
