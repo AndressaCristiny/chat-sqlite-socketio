@@ -11,8 +11,9 @@ Permite múltiplos usuários se conectarem simultaneamente, enviar mensagens e v
 - TypeScript
 - SQLite
 - Socket.IO
-- Bootstrap 5
-- HTML, CSS
+- Bootstrap
+- HTML
+- CSS
 
 ---
 
@@ -22,7 +23,6 @@ Permite múltiplos usuários se conectarem simultaneamente, enviar mensagens e v
 - Envio de mensagens em tempo real.
 - Histórico de mensagens persistido em banco SQLite.
 - Interface responsiva e estilizada com Bootstrap.
-- Envio de mensagens via **botão** ou **Enter**.
 
 ---
 
@@ -30,7 +30,7 @@ Permite múltiplos usuários se conectarem simultaneamente, enviar mensagens e v
 
 ```bash
 # Clonar
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/AndressaCristiny/chat-sqlite-socketio.git
 
 # Instalar
 npm i
